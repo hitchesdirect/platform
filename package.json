@@ -3,36 +3,43 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "now-build": "VUE_APP_API_DOMAIN=https://goapi.curtmfg.com VUE_APP_API_KEY=9300f7bc-2ca6-11e4-8758-42010af0fd79 npm run build",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "test:e2e": "vue-cli-service test:e2e",
-    "test:unit": "vue-cli-service test:unit"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "bulma": "^0.7.2",
     "compass-mixins": "^0.12.10",
     "register-service-worker": "^1.5.2",
     "vue": "^2.5.21",
+    "vue-carousel": "^0.17.0",
     "vue-class-component": "^6.0.0",
+    "vue-parallaxy": "^1.1.1",
     "vue-property-decorator": "^7.0.0",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.0",
     "@types/mocha": "^5.2.4",
     "@vue/cli-plugin-babel": "^3.3.0",
-    "@vue/cli-plugin-e2e-cypress": "^3.3.0",
     "@vue/cli-plugin-pwa": "^3.3.0",
     "@vue/cli-plugin-typescript": "^3.3.0",
     "@vue/cli-plugin-unit-mocha": "^3.3.0",
-    "@vue/cli-service": "^3.3.0",
+    "@vue/cli-service": "^3.5.3",
     "@vue/test-utils": "^1.0.0-beta.20",
     "chai": "^4.1.2",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
     "typescript": "^3.0.0",
     "vue-template-compiler": "^2.5.21"
+  },
+  "now": {
+    "engines": {
+      "node": "v10.15.3"
+    }
   }
 }

@@ -1,42 +1,60 @@
 <template>
-  <div id="app">
-    <Navigation />
-    <!-- <Lookup /> -->
-  </div>
+	<div id="app">
+		<div class="menu">
+			<Promo />
+			<Navigation class="nav"/>
+			<Flyout :flyout="flyout()"/>
+			<Lookup />
+		</div>
+		
+
+		<div class="view">
+			<router-view :key="$route.fullPath" />
+		</div>
+		<Footer />
+	</div>
 </template>
 
 <style lang="scss">
-@import '~bulma/bulma';
+@import "~bulma/bulma";
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #090808;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+	font-family: "Avenir", Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: $black;
+
+	.view {
+		width: 100%;
+	}
 }
 </style>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Navigation from '@/components/Navigation.vue'; // @ is an alias to /src
+import Navigation from '@/components/Navigation.vue';
+import Promo from '@/components/Promo.vue';
+import Flyout from '@/components/Flyout.vue';
+import Footer from '@/components/Footer.vue';
 import Lookup from '@/components/Lookup.vue'; // @ is an alias to /src
 
 @Component({
-  components: {
-    Navigation,
-    Lookup,
-  },
+	components: {
+		Navigation,
+		Flyout,
+		Lookup,
+		Footer,
+		Promo,
+	},
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+
+	private category() {
+		return this.$store.state.category;
+	}
+
+	private flyout() {
+		return this.$store.state.flyout;
+	}
+}
 </script>

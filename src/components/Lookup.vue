@@ -1,80 +1,175 @@
 <template>
-  <nav class="navbar navigation" role="navigation" aria-label="main navigation">
-     <div class="navbar-menu">
-      <div class="navbar-start">
-        <router-link to="/" class="navbar-item">
-          Shop CURT
-          <i class="fas fa-caret-down"></i>
-        </router-link>
-        <router-view/>
-      </div>
-    </div>
-  </nav>
+	<form @submit.prevent="submit()" class="lookup">
+		<div>
+			<span>Select Vehicle</span>
+		</div>
+		<div class="control">
+			<div class="select is-small">
+				<select name="year" id="year" @change="updateVehicle($event, 'year')">
+					<option value="">- Year -</option>
+					<option v-for="(year, i) in lookupState.available_years" v-bind:key="i">{{ year }}</option>
+				</select>
+			</div>
+		</div>
+		<div class="control">
+			<div class="select is-small">
+				<select name="make" id="make" @change="updateVehicle($event, 'make')">
+					<option value="">- Make -</option>
+					<option v-bind:value="make" v-for="(make, i) in lookupState.available_makes" v-bind:key="i">{{ make }}</option>
+				</select>
+			</div>
+		</div>
+		<div class="control">
+			<div class="select is-small">
+				<select name="model" id="model" @change="updateVehicle($event, 'model')">
+					<option value="">- Model -</option>
+					<option v-bind:value="model" v-for="(model, i) in lookupState.available_models" v-bind:key="i">{{ model }}</option>
+				</select>
+			</div>
+		</div>
+		<div class="control">
+			<div class="select is-small">
+				<select name="style" id="style" @change="updateVehicle($event, 'style')">
+					<option value="">- Style -</option>
+					<option v-bind:value="style" v-for="(style, i) in lookupState.available_styles" v-bind:key="i">{{ style }}</option>
+				</select>
+			</div>
+		</div>
+		<div class="control">
+			<button :disabled="!validVehicle()" class="button is-small">Search</button>
+		</div>
+	</form>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
+import { Vehicle } from './Vehicle';
 
-@Component
-export default class Menu extends Vue {
-  @Prop() private msg!: string;
+@Component({
+	computed: {
+		...mapGetters(['vehicleState', 'lookupState']),
+	},
+})
+export default class Lookup extends Vue {
+
+	public created() {
+		this.$store.dispatch('queryVehicle');
+	}
+
+	private validVehicle(): boolean {
+		return this.$store.state.vehicleState.complete();
+	}
+
+	private submit() {
+		const segments: string[] = [
+			'vehicle',
+			this.$store.state.vehicleState.year,
+			this.$store.state.vehicleState.make,
+			this.$store.state.vehicleState.model,
+			this.$store.state.vehicleState.style,
+		];
+		this.$router.push({ path: `/${segments.join('/')}` });
+	}
+
+	private updateVehicle($event: any, prop: string) {
+		let vehicle;
+		switch (prop) {
+			case 'year':
+				vehicle = new Vehicle(
+					$event.target.value,
+					'',
+					'',
+					'',
+				);
+				break;
+			case 'make':
+				vehicle = new Vehicle(
+					this.$store.state.vehicleState.year,
+					$event.target.value,
+					'',
+					'',
+				);
+				break;
+			case 'model':
+				vehicle = new Vehicle(
+					this.$store.state.vehicleState.year,
+					this.$store.state.vehicleState.make,
+					$event.target.value,
+					'',
+				);
+				break;
+			case 'style':
+				vehicle = new Vehicle(
+					this.$store.state.vehicleState.year,
+					this.$store.state.vehicleState.make,
+					this.$store.state.vehicleState.model,
+					$event.target.value,
+				);
+				break;
+			default:
+				break;
+		}
+
+		this.$store.dispatch('setVehicleState', vehicle);
+	}
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-@import "compass/css3";
-@import "compass/css3/animation";
-$animate: all 0.2s ease-in-out;
-$orange: rgb(250,132,15);
-$darkOrange: rgb(220, 112, 4);
-.navbar {
+@import "../main.scss";
 
-  .navbar-menu {
-    // @include filter-gradient(vertical, #fa840f, #bd6002); // IE6-9
-    @include background-image(linear-gradient(top, $orange 0%,$orange 90%,$darkOrange 100%));
-    border-top: 1px solid darken($orange, 10%);
-    border-bottom: 1.2px solid darken($darkOrange, 30%);
-    padding: 10px 20px;
-    .navbar-start {
-      align-items: center;
-    }
+.lookup {
+	width: 100%;
+	background: $tan;
+	display: flex;
+	flex-direction: column;
+	padding: 15px 5%;
+	justify-content: flex-start;
+	align-items: center;
+	box-shadow: 1px 0px 5px rgb(9, 8, 8);
 
-    .navbar-item {
-      font-size: 3vw;
-      text-align: center;
-      margin: 0;
-      padding: 0 5px;
-      transition: $animate;
-      position: relative;
+	& > div {
+		overflow: hidden;
+		margin: 5px 0;
+		width: 100%;
 
-      @media screen and (min-width: 992px) {
-        font-size: 16px;
-      }
+		&:first-child {
+			span{
+				color: $white;
+				font-size: 15px;
+				font-weight: 600;
+			}
+		}
 
-      &:before, &:after {
-        content: "";
-        position: absolute;
-        bottom: -10px;
-        width: 0px;
-        height: 5px;
-        margin: 5px 0 0;
-        transition: $animate;
-        transition-duration: 0.75s;
-        opacity: 0;
-        left: 0;
-        background-color: desaturate($orange, 40%);
-      }
+		& > div, & > div > select {
+			width: 100%;
+		}
 
-      &:hover {
-        cursor: pointer;
-
-        &:before,&:after {
-          width: 100%;
-          opacity: 1;
-        }
-      }
-    }
-  }
+		button {
+			background-color: $black;
+			transition: all 0.2s ease-in;
+			color: $white;
+			font-size: 13px;
+			&:hover {
+				background-color: $orange;
+			}
+		}
+	}
 }
+
+@media only screen and (min-width: 1088px) {
+	.lookup {
+		flex-direction: row;
+		padding: 15px 10% 15px 10%;
+
+		& > div {
+			margin: 0 10px;
+			&:first-child {
+				margin: 0;
+			}
+		}
+	}
+}
+
 </style>

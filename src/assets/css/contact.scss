@@ -1,0 +1,75 @@
+@import '../../main.scss';
+
+.banner {
+    background-image: url('/img/storefront.jpg');
+    width: 100%;
+    min-height: 600px;
+    background-position: center;
+    background-size: cover;
+}
+
+.grid {
+    display: flex;
+    flex-direction: row;
+
+    &>div,
+    &>form {
+        flex: 1;
+        width: 50%;
+
+        &:first-child {
+            margin: 25px 0;
+            padding: 0 50px;
+            border-right: 1px solid lighten($color: $black, $amount: 60%);
+
+            & > h1 {
+                font-size: 28px;
+                font-weight: bold;
+                text-align: right;
+                margin-bottom: 25px;
+            }
+
+            & > div {
+                max-width: 60%;
+                margin-left: auto;
+                &:last-child{
+                    justify-content: flex-end;
+                    & > .control {
+                        display: flex;
+                        align-items: baseline;
+                    }
+
+                    span {
+                        margin-right: 10px;
+                    }
+
+                    button {
+                        background-color: $black;
+                        transition: all 0.2s ease-in;
+                        &:hover {
+                            background-color: $orange;
+                        }
+                    }
+                }
+            }
+        }
+
+        &:last-child {
+            padding: 25px;
+            
+            & > .mapouter {
+            	text-align: right;
+            	// height: 500px;
+                // width: 600px;
+                width: 100%;
+
+                .gmap_canvas {
+                    overflow: hidden;
+                    background: none;
+                    height: 500px;
+                    width: 600px;
+                }
+            }
+        }
+    }
+}
